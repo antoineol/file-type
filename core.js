@@ -34,10 +34,7 @@ export async function fileTypeFromBuffer(input) {
 }
 
 function _check(buffer, headers, options) {
-	options = {
-		offset: 0,
-		...options,
-	};
+	options = Object.assign({ offset: 0 }, options);
 
 	for (const [index, header] of headers.entries()) {
 		// If a bitmask is set
