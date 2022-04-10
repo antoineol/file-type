@@ -19,18 +19,21 @@ async function fromStream(stream) {
 	}
 }
 
+const hasNodeBuffer = typeof Buffer !== 'undefined';
+
 async function fromBuffer(input) {
-	if (!(input instanceof Uint8Array || input instanceof ArrayBuffer || Buffer.isBuffer(input))) {
+	if (!(input instanceof Uint8Array || input instanceof ArrayBuffer || hasNodeBuffer && Buffer.isBuffer(input))) {
 		throw new TypeError(`Expected the \`input\` argument to be of type \`Uint8Array\` or \`Buffer\` or \`ArrayBuffer\`, got \`${typeof input}\``);
 	}
 
-	const buffer = input instanceof Buffer ? input : Buffer.from(input);
+	// const buffer = input instanceof Buffer ? input : Buffer.from(input);
+	const buffer = input instanceof Uint8Array ? input.buffer : input;
 
 	if (!(buffer && buffer.length > 1)) {
 		return;
 	}
 
-	const tokenizer = strtok3.fromBuffer(buffer);
+	const tokenizer = strtok3.fromBuffer(input);
 	return fromTokenizer(tokenizer);
 }
 
